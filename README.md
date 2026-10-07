@@ -115,7 +115,7 @@ cmake --build build
 
 The compiled package will be generated at:
 ```text
-build/RawRun_1.0.0.uapp
+build/RawRun_0.0.1.uapp
 ```
 
 ## License

@@ -5,8 +5,8 @@
   ],
   "name": "RawRun",
   "icon": "icon.png",
-  "binary": "RawRun_1.0.0.uapp",
-  "appVersion": "1.0.0",
+  "binary": "RawRun_0.0.1.uapp",
+  "appVersion": "0.0.1",
   "minKernelVersion": "1.4.0",
   "requiredHardware": [
     "GPS",
