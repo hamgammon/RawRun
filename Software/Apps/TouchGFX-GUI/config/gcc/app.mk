@@ -1,1 +1,1 @@
-touchgfx_path := ../../../../../../ThirdParty/touchgfx
+touchgfx_path := ../../../../una-sdk/ThirdParty/touchgfx

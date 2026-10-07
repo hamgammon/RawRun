@@ -3,14 +3,12 @@ cmake_minimum_required(VERSION 3.21)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
 
 # App configuration
-set(APP_NAME "Running")
-# Launcher name only. APP_NAME stays "Running" so the targets, ELFs and the
-# .uapp artifact keep the names the OTA flow and the release zip expect.
-set(APP_USER_NAME "Run")
-set(APP_FILE_NAME "Running")
+set(APP_NAME "RawRun")
+set(APP_USER_NAME "RawRun")
+set(APP_FILE_NAME "RawRun")
 set(APP_TYPE "Activity")
 set(DEV_ID "UNA")
-set(APP_ID "A12E9F4C8B7D3A65")
+set(APP_ID "162893C8CD81241A")
 set(RESOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../Resources")
 set(OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../Output")
 set(LIBS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../Libs")
@@ -41,6 +39,7 @@ endif()
 project(${APP_NAME})
 
 # Set up version
+set(BUILD_VERSION "1.0.0")
 una_app_setup_version(BUILD_VERSION ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Build service

@@ -1,0 +1,27 @@
+{
+  "manifest_version": 1,
+  "type": [
+    "activity"
+  ],
+  "name": "RawRun",
+  "icon": "icon.png",
+  "binary": "RawRun_1.0.0.uapp",
+  "appVersion": "1.0.0",
+  "minKernelVersion": "1.4.0",
+  "requiredHardware": [
+    "GPS",
+    "ACCELEROMETER",
+    "HR"
+  ],
+  "description": "RawRun is a real-time tracking app for your runs with GPS pace, heart rate, cadence, interval training, and FIT activity logging.",
+  "id": "162893C8CD81241A",
+  "supportsLaps": true,
+  "supportsDistance": true,
+  "supportsTrack": true,
+  "supportsHeartbeat": true,
+  "supportsElevation": true,
+  "supportsStep": true,
+  "supportsSpeed": "pace",
+  "customMeasures": [],
+  "stravaExport": true
+}

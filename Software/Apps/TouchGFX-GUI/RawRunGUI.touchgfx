@@ -4075,7 +4075,7 @@
         "Interactions": []
       }
     ],
-    "Name": "AppGUI",
+    "Name": "RawRunGUI",
     "Resolution": {
       "Width": 240,
       "Height": 240
@@ -4083,7 +4083,7 @@
     "SelectedColorDepth": 8,
     "StartupScreenName": "Main",
     "SelectedStartupLanguage": "GB",
-    "TouchGfxPath": "../../../../../../ThirdParty/touchgfx",
+    "TouchGfxPath": "../../../../una-sdk/ThirdParty/touchgfx",
     "UIPath": ".",
     "AvailableColorDepths": [
       8
