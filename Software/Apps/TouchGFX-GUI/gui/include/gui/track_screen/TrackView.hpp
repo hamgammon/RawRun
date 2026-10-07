@@ -26,21 +26,9 @@ public:
     void setAccessoryStatus(uint8_t state);
 
 protected:
-
     virtual void handleKeyEvent(uint8_t key) override;
 
-    // In-activity HR icon reflects the live source, recomputed from both the
-    // accessory link state (engaged?) and the latest HR-sample source.
-    void updateHrIcon();
-
-    bool     mIntervalsMode = false;
-    uint16_t mCurrentFaceId = 0;
-    bool     mIsImperial    = false;
-    bool     mIs12Hour      = false;
-    uint8_t  mHrThresholds[App::Config::kHrThresholdsCount] = {};
-    uint8_t  mHrThresholdCount = 0;
-    uint8_t  mAccessoryState = 0;  // last SDK::Accessory::State (engaged?)
-    uint8_t  mHrSource       = 0;  // last HR-sample source (steady vs flashing)
+    bool mIs12Hour = false;
 };
 
 #endif // TRACKVIEW_HPP

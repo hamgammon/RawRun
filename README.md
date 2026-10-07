@@ -1,51 +1,48 @@
 # RawRun
 
-> Real-time running activity tracking for the UNA Watch — GPS, heart rate, cadence, interval workouts, and FIT activity logging.
+> Minimal, high-contrast running activity tracker for the UNA Watch — focused single-screen view with GPS lock indicator, current time of day, and elapsed run time.
 
-A comprehensive running activity tracker designed for the [UNA Watch](https://unawatch.com) (240×240 display).
+A streamlined running activity app designed for the [UNA Watch](https://unawatch.com) (240×240 display).
 
 ```
 +---------------------------------------+
 |             240 x 240 px              |
 |                                       |
-|  [GPS ●]                   [BAT 95%]  |
+|               [GPS ●]                 |  <- 1. GPS Lock Indicator
+|                                       |     (Blinks searching, solid when locked)
 |                                       |
-|               05 : 24                 |  <- Time / Duration
+|                 TIME                  |  <- 2. Current Time of Day
+|               10 : 42                 |     (40pt SemiBold, 12h/24h with AM/PM)
 |                                       |
-|    5.42 km               148 bpm      |  <- Distance & HR
+|       -------------------------       |  <- Teal Divider Line
 |                                       |
-|             04'32" /km                |  <- Current Pace
+|               ELAPSED                 |  <- 3. Elapsed Run Time
+|              0 : 24 : 15              |     (35pt SemiBold H:MM:SS)
 |                                       |
+|  [■ Pause/Menu]                       |  <- R1: Action Menu (Pause / Stop)
 +---------------------------------------+
 ```
 
 ```mermaid
 flowchart TD
-    subgraph RawRun["RawRun Display Faces (240x240)"]
+    subgraph Display["RawRun Activity Screen (240x240)"]
         direction TB
-        TOTAL["Total Metrics Face<br/>Duration, Distance, Pace, Heart Rate"]
-        LAP["Lap Face<br/>Current Lap Time, Lap Distance, Lap Pace"]
-        INTERVALS["Intervals Face<br/>Run/Rest Phases, Phase Countdown, Repeats"]
-        MAP["Map & Track Face<br/>GPS Track Polyline, Compass Heading"]
-        STATUS["Status Face<br/>GPS Fix, HR Sensor, Battery Level"]
-        SUMMARY["Activity Summary<br/>Pace Breakdown, Heart Rate Zones, Lap Table"]
+        GPS["GPS Lock Status<br/>Animated sensor indicator: Blinking (Acquiring) / Solid (Locked)"]
+        TIME["Current Time of Day<br/>40pt Poppins SemiBold (12h/24h with AM/PM)"]
+        DIV["Teal Divider Line<br/>170px rounded horizontal rule"]
+        ELAPSED["Elapsed Run Time<br/>35pt Poppins SemiBold (H:MM:SS)"]
+        GPS --> TIME --> DIV --> ELAPSED
     end
 ```
 
 ## Features
 
-- **Real-Time Running Metrics**: High-contrast, live metrics displaying duration, distance, instantaneous and average pace, current/average/max heart rate, and cadence (steps per minute).
-- **GPS Tracking & Breadcrumb Map**: Integrates GPS location and speed sensors with real-time polyline rendering of your route.
-- **Interval Training**: Built-in interval workout engine supporting customizable warm-up, run, rest, and cool-down phases with time- or distance-based boundaries and repeat counts.
-- **Automatic & Manual Lap Splitting**: Auto-lap triggers based on distance or time thresholds, plus manual lap splitting.
-- **Smart Wrist-Raise Detection**: Custom accelerometer gesture detector tuned for running swing physics, waking the display cleanly on wrist tilt while rejecting stride motion artifacts.
-- **FIT Activity Recording**: Automatically writes standardized FIT activity files with session, lap, and record messages for export to Strava and training platforms.
-- **Sensor Integration**:
-  - GPS Location & Speed
-  - Heart Rate Monitor with trust level assessment
-  - Running Cadence
-  - Barometric Altimeter / Elevation tracking
-  - Battery Level monitor
+- **Focused Single-Screen UI**: No distractions and no scrolling between multiple faces while running. Everything you need is visible on a single high-contrast screen.
+- **1. GPS Lock Status Indicator**: Top-center icon providing immediate visual feedback on GPS satellite fix status (blinking while searching, solid when lock is acquired).
+- **2. Current Time of Day**: Prominent time-of-day clock rendered in 40pt typography. Respects system 12-hour (with AM/PM suffix) or 24-hour time preferences.
+- **3. Elapsed Run Time**: High-contrast running stopwatch (`H:MM:SS`) tracking total elapsed activity duration from start to finish.
+- **One-Touch Action Controls**: Quick access to the Pause / Stop / Discard menu via the top-right physical button (R1).
+- **FIT Activity Logging**: Full activity recording in the background into standardized FIT format for export to Strava and training platforms.
 
 ## Architecture
 
@@ -53,43 +50,39 @@ Built using the UNA Watch SDK two-process model:
 
 ```mermaid
 flowchart LR
-    subgraph Sensors["Hardware & Sensors"]
+    subgraph Sensors["Hardware Sensors"]
         GPS["GPS Location & Speed"]
-        HR["Heart Rate Monitor"]
-        IMU["Accelerometer / Cadence / Wrist Tilt"]
-        BARO["Barometer / Elevation"]
+        HR["Heart Rate Sensor"]
+        RTC["Hardware RTC (Wall Time)"]
     end
 
     subgraph Service["RawRunService.elf (Background)"]
-        CORE["Service Core<br/>State Engine"]
-        INT["Interval Engine"]
-        FIT["FIT File Writer<br/>Activity Persistence"]
+        CORE["Service Engine<br/>Run Timer & State"]
+        FIT["FIT File Writer<br/>Activity Logging"]
     end
 
     subgraph IPC["OS Message Queue"]
-        QUE["IPC Queue<br/>Commands & Track Data Snapshots"]
+        QUE["IPC Queue<br/>GPS Fix, RTC Tick, Track Time"]
     end
 
     subgraph GUI["RawRunGUI.elf (TouchGFX)"]
-        MODEL["TouchGFX Model"]
-        PRES["Presenters"]
-        VIEWS["Views (Track, Intervals, Menus, Summary)"]
+        PRES["TrackPresenter"]
+        VIEW["TrackView (Single Face)"]
         DISP["240x240 LCD"]
     end
 
-    Sensors -->|Sensor Events| Service
-    Service -->|Track Data 1Hz| QUE
-    QUE --> MODEL
-    MODEL --> PRES
-    PRES --> VIEWS
-    VIEWS --> DISP
-    VIEWS -->|User Commands| QUE
+    Sensors --> Service
+    Service -->|1Hz Update| QUE
+    QUE --> PRES
+    PRES --> VIEW
+    VIEW --> DISP
+    VIEW -->|R1: Action Menu| QUE
     QUE --> Service
     Service --> FIT
 ```
 
-1. **Service (`RawRunService.elf`)**: Background daemon managing sensor subscriptions, pace/lap/interval state machines, and writing activity FIT files to flash storage.
-2. **GUI (`RawRunGUI.elf`)**: Foreground TouchGFX process rendering screens, interval timers, zone visualizations, and breadcrumb tracks.
+1. **Service (`RawRunService.elf`)**: Background daemon managing GPS fix monitoring, elapsed run timer calculation, and writing activity FIT files to flash storage.
+2. **GUI (`RawRunGUI.elf`)**: Foreground TouchGFX process displaying the single-screen running activity face and handling button interactions.
 
 ## Building
 
@@ -104,7 +97,7 @@ flowchart LR
 
 ```bash
 # 1. Set UNA SDK path
-export UNA_SDK="/path/to/una-sdk"
+export UNA_SDK="/Users/scottcowie/repos/una-sdk"
 
 # 2. Configure build
 cmake -B build Software/Apps/RawRun-CMake
