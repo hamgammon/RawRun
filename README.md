@@ -7,6 +7,12 @@
 
 A streamlined running activity app designed for the [UNA Watch](https://unawatch.com) (240×240 display).
 
+<p align="center">
+  <img src="Resources/rawrun_watch_teal.png" width="380" alt="RawRun on UNA Watch Hardware Mockup" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="Resources/rawrun_screen_480.png" width="240" alt="RawRun Display Render (240x240 circular LCD)" />
+</p>
+
 ```
 +---------------------------------------+
 |             240 x 240 px              |
