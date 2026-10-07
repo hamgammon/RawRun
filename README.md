@@ -1,6 +1,8 @@
 # RawRun
 
-> Minimal, high-contrast running activity tracker for the UNA Watch — focused single-screen view with GPS lock indicator, current time of day, and elapsed run time.
+>  Sometimes you just need to go out and run and clear the mind - you can look at the data later.
+>  Minimal, high-contrast running activity tracker for the UNA Watch — focused single-screen view with GPS lock indicator, current time of day, and elapsed run time.
+
 
 A streamlined running activity app designed for the [UNA Watch](https://unawatch.com) (240×240 display).
 
